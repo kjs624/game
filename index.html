@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIGNAL ZERO // Cyber Circular Defense</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+  <!-- Screen Flashes for Hits & Blackouts -->
+  <div class="screen-flash"></div>
+
+  <!-- Primary Cockpit Dashboard -->
+  <div class="dashboard">
+    
+    <!-- Top-Bar HUD Indicators -->
+    <header class="cyber-panel top-bar">
+      <div class="title-container">
+        <h1 class="main-title">SIGNAL ZERO</h1>
+        <span class="sub-title">CORE NAVIGATION DEFENSE SYSTEM // AI-TACTICAL v1.0</span>
+      </div>
+
+      <div class="wave-indicator-wrapper">
+        <div class="wave-status-card">
+          <div id="wave-number" class="wave-number">WAVE 0</div>
+          <div id="wave-type" class="wave-type">SYSTEMS INITIALIZING</div>
+          <div class="wave-timer-bar">
+            <div id="wave-timer-fill" class="wave-timer-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="score-economy-panel">
+        <div class="score-display">
+          <span class="score-label">CURRENT SECURE INDEX</span>
+          <span id="score-val" class="score-value">000000</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Left Sidebar: Manual Core Abilities & System Feed -->
+    <aside class="cyber-panel left-sidebar">
+      <div class="panel-header">MANUAL SYSTEM UTILITIES</div>
+      
+      <!-- Energy Cell Resource Dashboard -->
+      <div class="energy-display-box">
+        <span class="energy-label">ENERGY CORE CELLS</span>
+        <span id="energy-cells-count" class="energy-count">3</span>
+      </div>
+
+      <!-- Abilities Utilities Grid -->
+      <div class="ability-grid">
+        <button id="ability-emp" class="ability-button" disabled>
+          <div class="ability-info">
+            <span class="ability-name">EMP BURST</span>
+            <span class="ability-desc">Stun all VORN units (3s)</span>
+          </div>
+          <span class="ability-cost">1⚡</span>
+        </button>
+
+        <button id="ability-overcharge" class="ability-button" disabled>
+          <div class="ability-info">
+            <span class="ability-name">OVERCHARGE SPEED</span>
+            <span class="ability-desc">Drones fire 2x faster (10s)</span>
+          </div>
+          <span class="ability-cost">2⚡</span>
+        </button>
+
+        <button id="ability-harvest" class="ability-button" disabled>
+          <div class="ability-info">
+            <span class="ability-name">FRAGMENT HARVEST</span>
+            <span class="ability-desc">Force immediate drops on field</span>
+          </div>
+          <span class="ability-cost">1⚡</span>
+        </button>
+
+        <button id="ability-shield" class="ability-button" disabled>
+          <div class="ability-info">
+            <span class="ability-name">EMERGENCY CORE MATRIX</span>
+            <span class="ability-desc">Core invincible shield (8s)</span>
+          </div>
+          <span class="ability-cost">3⚡</span>
+        </button>
+
+        <button id="ability-recall" class="ability-button" disabled>
+          <div class="ability-info">
+            <span class="ability-name">TACTICAL RECALL</span>
+            <span class="ability-desc">Pickup unit for placement</span>
+          </div>
+          <span class="ability-cost">2⚡</span>
+        </button>
+      </div>
+
+      <div class="panel-header">COMBAT DATA LOG</div>
+      <!-- Real-time scroll feed -->
+      <div id="log-feed" class="system-logs">
+        <div class="log-entry info">> Connection established with Navigation Engine.</div>
+        <div class="log-entry info">> Standby for VORN nanobot vector signals...</div>
+      </div>
+    </aside>
+
+    <!-- Center Panel: The Tactical Battle Map Grid & Ticks controls -->
+    <main class="center-area">
+      <div class="cyber-panel arena-panel">
+        
+        <!-- Canvas UI HUD tags -->
+        <div class="canvas-header">
+          <div class="hud-pill">360° RANGE COMPASS</div>
+          <div id="audio-toggle-btn" class="hud-pill hud-pill-interactive">AUDIO: ACTIVE</div>
+        </div>
+
+        <!-- Big Center warning -->
+        <div id="warning-notice" class="overlay-notification">
+          <h2 class="overlay-title">WARNING</h2>
+          <p id="warning-desc" class="overlay-desc">CORE INTEGRITY CRITICALLY BREACHED</p>
+        </div>
+
+        <canvas id="game-canvas" width="640" height="640"></canvas>
+      </div>
+
+      <!-- Core controllers bottom toolbar -->
+      <div class="cyber-panel arena-controls">
+        <div class="speed-controllers">
+          <button id="speed-pause" class="speed-btn">PAUSE</button>
+          <button id="speed-1x" class="speed-btn active">1.0X</button>
+          <button id="speed-2x" class="speed-btn">2.0X</button>
+        </div>
+
+        <button id="how-to-play-btn" class="speed-btn">INSTRUCTIONS COMPENDIUM</button>
+        
+        <button id="start-wave-btn" class="ability-button" style="padding: 6px 20px; border-color: var(--neon-magenta); color: var(--neon-magenta);">
+          INITIALIZE DEFENSE PROTOCOL
+        </button>
+      </div>
+    </main>
+
+    <!-- Right Sidebar: Placement Shop, Upgrades, & Technology synthesis -->
+    <aside class="cyber-panel right-sidebar">
+      <!-- HP navigation base -->
+      <div class="core-status-box">
+        <div class="core-hp-header">
+          <span>NAVIGATION HP INTEGRITY</span>
+          <span id="core-hp-text" class="core-hp-val">1000 / 1000</span>
+        </div>
+        <div class="core-hp-bar">
+          <div id="core-hp-fill" class="core-hp-fill"></div>
+        </div>
+        <div class="core-repair-row">
+          <button id="repair-core-btn" class="repair-btn">EMERGENCY REPAIR (50 GRAY)</button>
+        </div>
+      </div>
+
+      <div class="panel-header">DRONE DEPLOYMENT ASSEMBLY</div>
+      
+      <!-- Shopping cards deployment slots -->
+      <div class="unit-shop-grid">
+        <div id="shop-sniper" class="shop-card sniper">
+          <div class="shop-card-info">
+            <span class="shop-card-name">RAILGUN DRONE</span>
+            <span class="shop-card-meta">Piercing / Max Radius targeting</span>
+          </div>
+          <span class="shop-card-cost">30g</span>
+        </div>
+
+        <div id="shop-aoe" class="shop-card aoe">
+          <div class="shop-card-info">
+            <span class="shop-card-name">PLASMA SPREADER</span>
+            <span class="shop-card-meta">Splash damage / Close density</span>
+          </div>
+          <span class="shop-card-cost">40g</span>
+        </div>
+
+        <div id="shop-barrier" class="shop-card barrier">
+          <div class="shop-card-info">
+            <span class="shop-card-name">SHIELD NODE</span>
+            <span class="shop-card-meta">Absorbs Vorn hits / Emits aura slow</span>
+          </div>
+          <span class="shop-card-cost">25g</span>
+        </div>
+      </div>
+
+      <div class="panel-header">ALIEN REVERSE SYNTHESIS</div>
+      
+      <div class="synthesis-station">
+        <!-- Rarity fragments grid -->
+        <div class="fragment-dock">
+          <div id="frag-gray" class="frag-cell gray">
+            <span class="frag-icon">⚙️</span>
+            <span id="frag-count-gray" class="frag-count">0</span>
+          </div>
+          <div id="frag-blue" class="frag-cell blue">
+            <span class="frag-icon">🔷</span>
+            <span id="frag-count-blue" class="frag-count">0</span>
+          </div>
+          <div id="frag-purple" class="frag-cell purple">
+            <span class="frag-icon">🔮</span>
+            <span id="frag-count-purple" class="frag-count">0</span>
+          </div>
+          <div id="frag-gold" class="frag-cell gold">
+            <span class="frag-icon">👑</span>
+            <span id="frag-count-gold" class="frag-count">0</span>
+          </div>
+        </div>
+
+        <!-- Detail card of active selection -->
+        <div id="detail-card" class="detail-card">
+          <div class="detail-header">
+            <span id="detail-name" class="detail-name">RAILGUN DRONE</span>
+            <span id="detail-lvl" class="detail-lvl">RANK 1</span>
+          </div>
+          <div class="detail-stats">
+            <div>INTEGRITY: <span id="detail-hp" class="detail-stat-val">100/100</span></div>
+            <div>FIREPOWER: <span id="detail-atk" class="detail-stat-val">120</span></div>
+            <div>ATTACK SPEED: <span id="detail-spd" class="detail-stat-val">0.8/s</span></div>
+          </div>
+          <div class="detail-mods">
+            <span style="font-size: 8px; color: var(--text-secondary); letter-spacing: 0.5px;">MUTATION MODS:</span>
+            <div id="detail-mods-container" style="display:flex; flex-direction:column; gap:4px;">
+              <!-- Dynamic mod slot bars -->
+            </div>
+          </div>
+          <div class="detail-actions">
+            <button id="upgrade-unit-btn" class="detail-btn">UPGRADE (15 GRAY)</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Instruction compendium overlay modal -->
+  <div id="instructions-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h2 class="modal-title">TACTICAL DEFENSE PROTOCOL</h2>
+      
+      <div class="modal-body">
+        <h3>1. CORE OBJECTIVE</h3>
+        <p>Defend the central Navigation Engine Core at all costs. If its HP drops to 0, the station collapses and the game ends. HP does not regenerate passively; you must perform Emergency Repairs using Gray Vorn Fragments between waves.</p>
+
+        <h3>2. 360-DEGREE DEFENSIVE POSITIONS</h3>
+        <p>Deploy autonomous drones into concentric ring cells. Drones can only be placed on the **INNER RING** (18 slots) or the **MID RING** (36 slots).
+          <ul>
+            <li><strong>Railgun Drone (Sniper)</strong>: Attacks the highest HP VORN enemy. Pierces linearly. Single-target priority.</li>
+            <li><strong>Plasma Spreader (AoE)</strong>: Fires explosive orbs towards dense enemy clusters. Slow speed, medium splash range.</li>
+            <li><strong>Shield Node (Barrier)</strong>: Absorbs Vorn attacks, slows enemies in adjacent areas, and blocks movement towards the Core.</li>
+          </ul>
+        </p>
+
+        <h3>3. CLASS TRINITY LOCKED SYNERGY</h3>
+        <p>Deploying at least one <strong>Sniper</strong>, one <strong>AoE Spreader</strong>, and one <strong>Barrier Node</strong> adjacent to each other in a triangle configuration triggers a **TRINITY LOCK**. Locked units share a mutual HP pool, gain +40% fire rates and stat efficiency, and glow with a connection shield beam.</p>
+
+        <h3>4. ALIEN TECH REVERSE SYNTHESIS</h3>
+        <p>Slain VORN nanobots drop colored technology shards: Gray (Common), Blue (Uncommon), Purple (Rare), and Gold (Legendary). Click a shard in your synthesis bar, then click any active drone on the grid to fuse modifications onto it! Each unit can hold up to 2 mods. Golden Legendary mods cannot coexist with any other mods.</p>
+
+        <h3>5. MANUAL SYSTEM ABILITIES</h3>
+        <p>Use accumulated Energy Core Cells to emit manually activated counter-signals: EMP fields to freeze swarms, Overcharges to double attack speed, Recall units for adjustments, or deploy the invincibility Emergency Matrix.</p>
+      </div>
+
+      <button id="close-modal-btn" class="modal-close-btn">CONFIRM CONNECTIONS</button>
+    </div>
+  </div>
+
+  <!-- Source Scripts Loading -->
+  <script src="sound.js"></script>
+  <script src="game.js"></script>
+  <script src="renderer.js"></script>
+  
+  <!-- Master HUD Controller & Loop Bindings -->
+  <script>
+    // Initialize Renderer
+    const Renderer = new CanvasRenderer('game-canvas');
+    let gameLoopInterval = null;
+
+    // Start instructions modal automatically
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('instructions-modal').style.display = 'flex';
+      setupUIBindings();
+      startLoop();
+    });
+
+    // Binds UI and buttons to GameEngine
+    function setupUIBindings() {
+      // Instructions modal toggle
+      document.getElementById('how-to-play-btn').onclick = () => {
+        document.getElementById('instructions-modal').style.display = 'flex';
+      };
+      document.getElementById('close-modal-btn').onclick = () => {
+        document.getElementById('instructions-modal').style.display = 'none';
+        Sound.init(); // Init AudioContext on confirm interaction
+      };
+
+      // Audio Toggle
+      const audioBtn = document.getElementById('audio-toggle-btn');
+      audioBtn.onclick = () => {
+        const isMuted = Sound.toggleMute();
+        audioBtn.innerText = `AUDIO: ${isMuted ? 'MUTED' : 'ACTIVE'}`;
+      };
+
+      // Speed Adjustments
+      const speedPause = document.getElementById('speed-pause');
+      const speed1x = document.getElementById('speed-1x');
+      const speed2x = document.getElementById('speed-2x');
+
+      speedPause.onclick = () => {
+        setSpeed(0, speedPause);
+      };
+      speed1x.onclick = () => {
+        setSpeed(1, speed1x);
+      };
+      speed2x.onclick = () => {
+        setSpeed(2, speed2x);
+      };
+
+      function setSpeed(spd, btn) {
+        Game.gameSpeed = spd;
+        [speedPause, speed1x, speed2x].forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        Game.log(`Game simulation speed set to ${spd}x.`, "info");
+      }
+
+      // Initialize Defense wave
+      const startWaveBtn = document.getElementById('start-wave-btn');
+      startWaveBtn.onclick = () => {
+        if (Game.phase === 'PREP') {
+          Game.startNextWave();
+          Sound.playUpgrade();
+        }
+      };
+
+      // Drone Deployment purchase binds
+      const shopSniper = document.getElementById('shop-sniper');
+      const shopAoE = document.getElementById('shop-aoe');
+      const shopBarrier = document.getElementById('shop-barrier');
+
+      setupShopClick(shopSniper, 'sniper');
+      setupShopClick(shopAoE, 'aoe');
+      setupShopClick(shopBarrier, 'barrier');
+
+      function setupShopClick(el, unitClass) {
+        el.onclick = () => {
+          // Clear active synthesis selection
+          Game.selectedFragmentType = null;
+          document.querySelectorAll('.frag-cell').forEach(c => c.classList.remove('selected'));
+
+          if (Game.selectedShopClass === unitClass) {
+            Game.selectedShopClass = null;
+            el.classList.remove('selected');
+          } else {
+            Game.selectedShopClass = unitClass;
+            document.querySelectorAll('.shop-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            Game.log(`Drone assembly armed: Deploy [${unitClass.toUpperCase()}] at any empty ring slot.`, "info");
+          }
+        };
+      }
+
+      // Synthesis shards clickable selection
+      const fragGray = document.getElementById('frag-gray');
+      const fragBlue = document.getElementById('frag-blue');
+      const fragPurple = document.getElementById('frag-purple');
+      const fragGold = document.getElementById('frag-gold');
+
+      setupFragClick(fragGray, 'gray');
+      setupFragClick(fragBlue, 'blue');
+      setupFragClick(fragPurple, 'purple');
+      setupFragClick(fragGold, 'gold');
+
+      function setupFragClick(el, fragType) {
+        el.onclick = () => {
+          // Clear active shop deployment selection
+          Game.selectedShopClass = null;
+          document.querySelectorAll('.shop-card').forEach(c => c.classList.remove('selected'));
+
+          if (Game.selectedFragmentType === fragType) {
+            Game.selectedFragmentType = null;
+            el.classList.remove('selected');
+          } else {
+            Game.selectedFragmentType = fragType;
+            document.querySelectorAll('.frag-cell').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            Game.log(`Mod matrix selected: Select any placed drone slot to fuse [${fragType.toUpperCase()}] mod.`, "info");
+          }
+        };
+      }
+
+      // Unit detail card actions
+      document.getElementById('upgrade-unit-btn').onclick = () => {
+        if (Game.selectedCell && Game.selectedCell.unit) {
+          Game.upgradeUnit(Game.selectedCell.unit);
+          Renderer.updateDetailCardUI();
+        }
+      };
+
+      // Emergency Core Repair button
+      document.getElementById('repair-core-btn').onclick = () => {
+        Game.repairCore();
+      };
+
+      // Manual Core utility button binds
+      document.getElementById('ability-emp').onclick = () => Game.triggerEMP();
+      document.getElementById('ability-overcharge').onclick = () => Game.triggerOvercharge();
+      document.getElementById('ability-harvest').onclick = () => Game.triggerHarvest();
+      document.getElementById('ability-shield').onclick = () => Game.triggerEmergencyShield();
+      
+      // Tactical Recall setup
+      const abilityRecall = document.getElementById('ability-recall');
+      abilityRecall.onclick = () => {
+        if (Game.selectedCell && Game.selectedCell.unit) {
+          Game.triggerRecall(Game.selectedCell.id);
+          Renderer.updateDetailCardUI();
+        } else {
+          Game.log("Select a placed drone on the circular compass grid first to Recall.", "warning");
+        }
+      };
+    }
+
+    // Engine loop ticks (60fps simulation)
+    function startLoop() {
+      if (gameLoopInterval) clearInterval(gameLoopInterval);
+
+      gameLoopInterval = setInterval(() => {
+        if (Game.gameSpeed > 0) {
+          // Double cycles if 2x speed
+          const cycles = Game.gameSpeed;
+          for (let i = 0; i < cycles; i++) {
+            Game.update();
+          }
+        }
+        
+        // Always render graphics at 60fps for maximum butter smoothness
+        Renderer.render();
+        updateHUDValues();
+      }, 1000 / 60);
+    }
+
+    // Direct interface data synchronization
+    function updateHUDValues() {
+      // 1. Text elements
+      document.getElementById('wave-number').innerText = `WAVE ${Game.waveNumber}`;
+      
+      let waveDesc = Game.waveType;
+      if (Game.phase === 'PREP') {
+        waveDesc = `COOLDOWN INTERVAL: ${Game.prepTimer}s`;
+      }
+      document.getElementById('wave-type').innerText = waveDesc;
+      
+      // Timer fill ratio
+      const timerFill = document.getElementById('wave-timer-fill');
+      if (Game.phase === 'PREP') {
+        timerFill.style.width = `${(Game.prepTimer / 30) * 100}%`;
+      } else {
+        // Active wave progress based on spawning count remaining
+        const totalWaveUnits = 10 + (Game.waveNumber * 3);
+        const ratio = Game.enemies.length / totalWaveUnits;
+        timerFill.style.width = `${Math.min(100, ratio * 100)}%`;
+      }
+
+      document.getElementById('score-val').innerText = String(Math.round(Game.score)).padStart(6, '0');
+      document.getElementById('energy-cells-count').innerText = Game.energyCells;
+      
+      // Core HP and Repair details
+      document.getElementById('core-hp-text').innerText = `${Math.round(Game.coreHP)} / ${Game.coreMaxHP}`;
+      const hpFill = document.getElementById('core-hp-fill');
+      hpFill.style.width = `${(Game.coreHP / Game.coreMaxHP) * 100}%`;
+      
+      // Dynamic alarms overlay
+      const warningNotice = document.getElementById('warning-notice');
+      const warningDesc = document.getElementById('warning-desc');
+      if (Game.gameOver) {
+        warningNotice.style.display = 'block';
+        warningDesc.innerText = `NAVIGATION ENGINE DESTROYED // SCORE: ${Math.round(Game.score)}`;
+      } else if (Game.coreHP <= 250) {
+        warningNotice.style.display = 'block';
+        warningDesc.innerText = "CRITICAL LIMIT: ENGINE SHIELDS DEFLATED";
+      } else if (Game.coreHP <= 500) {
+        warningNotice.style.display = 'block';
+        warningDesc.innerText = "WARNING: STRUCTURAL COMPROMISE IN MID SECTORS";
+      } else {
+        warningNotice.style.display = 'none';
+      }
+
+      // Gray Repair button enabled status
+      const repairBtn = document.getElementById('repair-core-btn');
+      repairBtn.disabled = Game.fragments.gray < 50 || Game.coreHP >= Game.coreMaxHP || Game.repairCountThisWave >= 100;
+      repairBtn.innerText = Game.repairCountThisWave >= 100 ? "REPAIR COOLDOWN CAP" : `EMERGENCY REPAIR (50 GRAY)`;
+
+      // Fragments counts updates
+      document.getElementById('frag-count-gray').innerText = Game.fragments.gray;
+      document.getElementById('frag-count-blue').innerText = Game.fragments.blue;
+      document.getElementById('frag-count-purple').innerText = Game.fragments.purple;
+      document.getElementById('frag-count-gold').innerText = Game.fragments.gold;
+
+      // Abilities active locks
+      document.getElementById('ability-emp').disabled = Game.energyCells < 1;
+      document.getElementById('ability-overcharge').disabled = Game.energyCells < 2;
+      document.getElementById('ability-harvest').disabled = Game.energyCells < 1;
+      document.getElementById('ability-shield').disabled = Game.energyCells < 3;
+      
+      // Enable Recall if unit is selected
+      const hasSelectedUnit = Game.selectedCell && Game.selectedCell.unit;
+      document.getElementById('ability-recall').disabled = Game.energyCells < 2 || !hasSelectedUnit;
+
+      // System log update render
+      const logFeed = document.getElementById('log-feed');
+      if (logFeed.children.length !== Game.logs.length) {
+        logFeed.innerHTML = '';
+        Game.logs.forEach(log => {
+          const div = document.createElement('div');
+          div.className = `log-entry ${log.type}`;
+          div.innerText = `[${log.time}] > ${log.text}`;
+          logFeed.appendChild(div);
+        });
+      }
+
+      // Active state button configurations
+      const startWaveBtn = document.getElementById('start-wave-btn');
+      startWaveBtn.disabled = Game.phase !== 'PREP';
+      startWaveBtn.innerText = Game.phase === 'PREP' ? "DEPLOY VECTOR SENSORS" : "DEFENSE RADAR ONLINE";
+    }
+  </script>
+</body>
+</html>
